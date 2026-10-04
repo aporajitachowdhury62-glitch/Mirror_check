@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: mirror-check-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: GEMINI_TIMEOUT_SECONDS
+        value: "15.0"
+      - key: CORS_ORIGINS
+        value: "http://localhost:3000,https://mirror-check.vercel.app"
+      - key: RATE_LIMIT_PER_MINUTE
+        value: 60/minute
+      - key: CACHE_TTL_SECONDS
+        value: "300"
+      - key: ENVIRONMENT
+        value: production
